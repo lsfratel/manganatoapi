@@ -1,4 +1,6 @@
 import base64
+import html
+import re
 import typing as t
 from urllib.parse import urljoin, urlparse
 
@@ -160,3 +162,57 @@ def strip_list(lst: list[str]):
             whitespace.
     """
     return [x.strip() for x in lst]
+
+
+def clean_html(raw_html):
+    """Remove HTML tags and entities."""
+    clean_text = re.sub(r'<.*?>', '', raw_html)
+    clean_text = html.unescape(clean_text)
+    return clean_text
+
+
+def normalize_whitespace(text):
+    """Normalize spaces and remove line breaks."""
+    text = re.sub(r'\s+', ' ', text, flags=re.MULTILINE)
+    return text.strip()
+
+
+def fix_punctuation(text):
+    """Fix spacing around punctuation and remove duplicates."""
+    text = re.sub(r'\s+([?.!,;:])', r'\1', text)
+    text = re.sub(r'([?.!,;:])(?!\s)', r'\1 ', text)
+    text = re.sub(r'([?.!,;])\1+', r'\1', text)
+    return text.strip()
+
+
+def normalize_text(text):
+    """Perform full normalization of text."""
+    text = clean_html(text)
+    text = normalize_whitespace(text)
+    text = fix_punctuation(text)
+
+    pattern = (
+        r'(?i)(.*?) summary is updating\. Come visit MangaNato\. com sometime '
+        r'to read the latest chapter of \1\. '
+        r'If you have any question about this manga, Please don\'t hesitate '
+        r'to contact us or translate team\. '
+        r'Hope you enjoy it\.'
+    )
+
+    text = re.sub(pattern, '', text)
+
+    text = re.sub(r'[‘’]', "'", text)
+    text = re.sub(r'[“”]', '"', text)
+
+    text = re.sub(r'^Description\s*:\s*|not found...|N/A|', '', text)
+    text = re.sub(r'^.+?Summary:\s*', '', text, flags=re.DOTALL)
+    text = re.sub(r'What is mangabuddy\?.*', '', text, flags=re.DOTALL)
+    text = re.sub(r'Alternative:.*', '', text, flags=re.DOTALL)
+    text = re.sub(r'Other attractive Manga:.*', '', text, flags=re.DOTALL)
+
+    text = text.strip()
+
+    if text == '':
+        return None
+
+    return text.strip()

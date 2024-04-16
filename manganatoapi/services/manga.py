@@ -157,11 +157,14 @@ def info(manga: str, prefix: str):
             "//div[@class='story-info-right-extent']//span[text()='Updated :']"
             '/following-sibling::span/text()'
         ).get(),
-        'description': select(
-            "//div[contains(@class, 'panel-story-info-description')]" '/text()'
-        )
-        .getall()[1]
-        .strip(),
+        'description': utils.normalize_text(
+            ''.join(
+                select(
+                    "//div[contains(@class, 'panel-story-info-description')]"
+                    '//text()'
+                ).getall()
+            )
+        ),
         'chapters': _process_chapters(
             select("//ul[contains(@class, 'row-content-chapter')]//a")
         ),
