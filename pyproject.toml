@@ -1,0 +1,58 @@
+[project]
+name = "manganatoapi"
+version = "0.1"
+description = "API wrapper for Manganato.com."
+authors = [
+  {name = "Lucas Santana", email = "lsfratel@gmail.com"},
+]
+dependencies = [
+  "gunicorn",
+  "restcraft @ file:///${PROJECT_ROOT}/dist/restcraft-0.1-py3-none-any.whl",
+  "requests>=2.31.0",
+  "parsel>=1.9.1",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+dev = "gunicorn --reload --threads 2 manganatoapi.wsgi"
+
+[tool.pdm.dev-dependencies]
+lint = ["ruff"]
+
+[tool.ruff]
+line-length = 79
+
+ignore = [
+  "E501",
+  "B008",
+  "C901",
+]
+
+select = [
+  "E",
+  "W",
+  "F",
+  "I",
+  "C",
+  "B",
+]
+
+[tool.ruff.lint]
+ignore = [
+  "B006",
+  "B010",
+  "B009"
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
