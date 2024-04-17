@@ -14,7 +14,7 @@ class ImageView(View):
     It is responsible for retrieving and serving the requested chapter image.
     """
 
-    route = r'^/v1/images/(?P<image>.+)$'
+    route = '/v1/images/<image:str>'
     methods = ['GET']
 
     def handler(self, req: Request) -> FileResponse:

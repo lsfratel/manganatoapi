@@ -1,5 +1,4 @@
 from restcraft.core import JSONResponse, Request, View
-from restcraft.core.response import Response
 
 from manganatoapi import exceptions, utils
 from manganatoapi.services import manga
@@ -14,7 +13,7 @@ class MangaView(View):
     updates.
     """
 
-    route = r'^/v1/mangas$'
+    route = '/v1/mangas'
     methods = ['GET']
 
     def handler(self, req: Request) -> JSONResponse:
@@ -34,23 +33,24 @@ class MangaView(View):
 class MangaInfoView(View):
     """
     Defines the `MangaInfoView` class, which is a view for handling requests to
-    the `/mangas/<prefix>-<manga>` route.
+    the `/mangas/<manga>` route.
 
     This view is responsible for fetching and returning detailed information
     about a specific manga.
     """
 
-    route = r'^/v1/mangas/(?P<prefix>(cu|mu))-(?P<manga>manga-[a-zA-Z0-9]+)$'
+    route = '/v1/mangas/<manga>'
     methods = ['GET']
 
     def handler(self, req: Request) -> JSONResponse:
-        manga_info = manga.info(req.params['manga'], req.params['prefix'])
+        manga_prefix, _, manga_id = req.params['manga'].partition('-')
+        manga_info = manga.info(manga_id, manga_prefix)
 
         return utils.success_response(
             'Latest manga info fetched successful.', payload=manga_info
         )
 
-    def on_exception(self, req: Request, exc: Exception) -> Response:
+    def on_exception(self, req: Request, exc: Exception) -> JSONResponse:
         if not isinstance(exc, exceptions.NotFound):
             raise exc
 

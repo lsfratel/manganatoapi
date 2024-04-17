@@ -15,7 +15,7 @@ class ChapterView(View):
     for a specific chapter.
     """
 
-    route = r'^/v1/chapters/(?P<chapter>[^/]+)$'
+    route = '/v1/chapters/<chapter:str>'
     methods = ['GET']
 
     def handler(self, req: Request) -> JSONResponse:
