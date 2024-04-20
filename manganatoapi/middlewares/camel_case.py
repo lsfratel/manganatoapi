@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing as t
 
-from restcraft.core.middleware import Middleware
+from restcraft.core.middleware.middleware import Middleware
 
 if t.TYPE_CHECKING:
     from restcraft.core import Request, Response

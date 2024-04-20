@@ -17,8 +17,12 @@ class MangaView(View):
     methods = ['GET']
 
     def handler(self, req: Request) -> JSONResponse:
-        page = int(req.query.get('page', 1))
-        search = req.query.get('q', None)
+        page = 1
+        search = None
+
+        if req.query:
+            page = req.query.get('page', default=1, type=int)
+            search = req.query.get('q', type=str)
 
         if search:
             updates = manga.search(search, page)
@@ -42,9 +46,14 @@ class MangaInfoView(View):
     route = '/v1/mangas/<manga>'
     methods = ['GET']
 
+    def before_handler(self, req: Request) -> None:
+        prefix, _, manga = req.params['manga'].partition('-')
+        req.set_params = {'prefix': prefix,'manga': manga}
+
     def handler(self, req: Request) -> JSONResponse:
-        manga_prefix, _, manga_id = req.params['manga'].partition('-')
-        manga_info = manga.info(manga_id, manga_prefix)
+        manga_info = manga.info(
+            prefix=req.params['prefix'], manga=req.params['manga']
+        )
 
         return utils.success_response(
             'Latest manga info fetched successful.', payload=manga_info
