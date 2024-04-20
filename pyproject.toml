@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
   "gunicorn",
-  "restcraft @ file:///${PROJECT_ROOT}/dist/restcraft-0.1-py3-none-any.whl",
+  "restcraft",
   "requests>=2.31.0",
   "parsel>=1.9.1",
 ]
