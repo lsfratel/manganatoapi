@@ -8,11 +8,9 @@ RUN pip install -U pdm
 
 COPY pyproject.toml pdm.lock README.md /srv
 
-COPY dist /srv/dist
-
-
 RUN pdm install --check --prod --no-editable
 
+#------------------------------------------------------------------------------
 
 FROM python:3.12-slim
 
