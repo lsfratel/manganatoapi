@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import binascii
+import typing as t
 
 from restcraft.core import FileResponse, JSONResponse, Request, View
+from restcraft.core.di import inject
 
-from manganatoapi import exceptions, utils
-from manganatoapi.services import image
+from ... import exceptions, utils
+
+if t.TYPE_CHECKING:
+    from ...services.image import ImageService
 
 
 class ImageView(View):
@@ -17,8 +23,9 @@ class ImageView(View):
     route = '/v1/images/<image:str>'
     methods = ['GET']
 
-    def handler(self, req: Request) -> FileResponse:
-        filename, headers, generator = image.get(req.params['image'])
+    @inject
+    def handler(self, req: Request, service: ImageService) -> FileResponse:
+        filename, headers, generator = service.get(req.params['image'])
 
         if filename == '':
             filename = 'unknown.jpg'

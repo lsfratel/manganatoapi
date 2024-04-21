@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import binascii
+import typing as t
 
 from restcraft.core import JSONResponse, Request, View
+from restcraft.core.di import inject
 
-from manganatoapi import utils
-from manganatoapi.services import manga
+from ... import utils
+
+if t.TYPE_CHECKING:
+    from ...services.manga import MangaService
 
 
 class ChapterView(View):
@@ -18,8 +24,9 @@ class ChapterView(View):
     route = '/v1/chapters/<chapter:str>'
     methods = ['GET']
 
-    def handler(self, req: Request) -> JSONResponse:
-        images = manga.images(req.params['chapter'])
+    @inject
+    def handler(self, req: Request, service: MangaService) -> JSONResponse:
+        images = service.images(req.params['chapter'])
 
         return utils.success_response(
             'Chapter images fetched successful.', payload=images

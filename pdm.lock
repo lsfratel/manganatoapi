@@ -266,13 +266,13 @@ files = [
 
 [[package]]
 name = "restcraft"
-version = "0.0.10"
+version = "0.0.14"
 requires_python = ">=3.10"
 summary = "A minimalist Python WSGI framework for building RESTful APIs."
 groups = ["default"]
 files = [
-    {file = "restcraft-0.0.10-py3-none-any.whl", hash = "sha256:f8cf2235500bb78a0dccf90c34621987c738256e48eb5e0397db786d6f4cbfe9"},
-    {file = "restcraft-0.0.10.tar.gz", hash = "sha256:813a71d45101cefe44f39d11db700574e5c880189e196808b264125c48fa0591"},
+    {file = "restcraft-0.0.14-py3-none-any.whl", hash = "sha256:baa02d4f733c6f95459c83b78e180249ed3e311793bef3b6a3b1a8c1274d8f8a"},
+    {file = "restcraft-0.0.14.tar.gz", hash = "sha256:972e3e1367785fa5c7aad694836e9134d74858d6c1913adbe88446a62eb3021f"},
 ]
 
 [[package]]

@@ -12,6 +12,13 @@ MIDDLEWARES = {
     'manganatoapi.middlewares.camel_case.SnakeCaseToCamelCase',
 }
 
+SERVICES = {
+    'singleton': {
+        'manganatoapi.services.request.RequestService',
+        'manganatoapi.services.manga.MangaService',
+        'manganatoapi.services.image.ImageService',
+    }
+}
 
 try:
     from .local_settings import *  # type: ignore # noqa: F403

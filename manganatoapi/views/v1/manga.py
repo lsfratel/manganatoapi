@@ -1,7 +1,14 @@
-from restcraft.core import JSONResponse, Request, View
+from __future__ import annotations
 
-from manganatoapi import exceptions, utils
-from manganatoapi.services import manga
+import typing as t
+
+from restcraft.core import JSONResponse, Request, View
+from restcraft.core.di import inject
+
+from ... import exceptions, utils
+
+if t.TYPE_CHECKING:
+    from ...services.manga import MangaService
 
 
 class MangaView(View):
@@ -16,7 +23,8 @@ class MangaView(View):
     route = '/v1/mangas'
     methods = ['GET']
 
-    def handler(self, req: Request) -> JSONResponse:
+    @inject
+    def handler(self, req: Request, service: MangaService) -> JSONResponse:
         page = 1
         search = None
 
@@ -25,9 +33,9 @@ class MangaView(View):
             search = req.query.get('q', type=str)
 
         if search:
-            updates = manga.search(search, page)
+            updates = service.search(search, page)
         else:
-            updates = manga.updates(page)
+            updates = service.updates(page)
 
         return utils.success_response(
             'Latest manga updates fetched successful.', payload=updates
@@ -48,10 +56,11 @@ class MangaInfoView(View):
 
     def before_handler(self, req: Request) -> None:
         prefix, _, manga = req.params['manga'].partition('-')
-        req.set_params = {'prefix': prefix,'manga': manga}
+        req.set_params = {'prefix': prefix, 'manga': manga}
 
-    def handler(self, req: Request) -> JSONResponse:
-        manga_info = manga.info(
+    @inject
+    def handler(self, req: Request, service: MangaService) -> JSONResponse:
+        manga_info = service.info(
             prefix=req.params['prefix'], manga=req.params['manga']
         )
 
