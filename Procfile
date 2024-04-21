@@ -1,1 +1,1 @@
-web: gunicorn --preload --threads 4 manganatoapi.wsgi
+web: gunicorn --preload --workers 2 --threads 4 manganatoapi.wsgi
